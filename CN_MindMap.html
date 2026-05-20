@@ -1,0 +1,1169 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Computer Networks · Mind Map · BCS603</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700;800&family=Fraunces:ital,wght@0,400;0,600;0,800;1,400&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:          #060816;
+    --bg-2:        #0a0e1f;
+    --grid:        rgba(120,140,180,.06);
+    --text:        #e8eaf3;
+    --text-dim:    #8590ad;
+    --text-mute:   #5a6585;
+    --line:        rgba(255,255,255,.07);
+
+    --u1: #22d3ee;  /* Physical / Intro     - cyan       */
+    --u2: #84cc16;  /* Data Link / MAC      - lime       */
+    --u3: #f59e0b;  /* Network              - amber      */
+    --u4: #fb7185;  /* Transport            - rose       */
+    --u5: #c084fc;  /* Application          - violet     */
+
+    --hot: #fbbf24;
+    --mono: "JetBrains Mono", "SF Mono", Menlo, Consolas, monospace;
+    --serif: "Fraunces", Georgia, serif;
+  }
+  *,*::before,*::after{ box-sizing: border-box; }
+  html,body{ margin:0; padding:0; }
+  body{
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    min-height: 100vh;
+    overflow-x: hidden;
+    background-image:
+      linear-gradient(var(--grid) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid) 1px, transparent 1px),
+      radial-gradient(ellipse 800px 400px at 50% 0%, rgba(34,211,238,.06), transparent 70%),
+      radial-gradient(ellipse 600px 400px at 80% 30%, rgba(192,132,252,.04), transparent 70%);
+    background-size: 32px 32px, 32px 32px, 100% 100%, 100% 100%;
+  }
+
+  /* ------------- HEADER ------------- */
+  header{
+    padding: 56px 32px 28px;
+    border-bottom: 1px solid var(--line);
+    position: relative;
+    max-width: 1480px;
+    margin: 0 auto;
+  }
+  header::before{
+    content: "";
+    position: absolute;
+    top: 0; left: 32px; right: 32px;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--u1) 20%, var(--u5) 80%, transparent);
+    opacity: .5;
+  }
+  .eyebrow{
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    font-size: 11px;
+    letter-spacing: .25em;
+    color: var(--text-mute);
+    text-transform: uppercase;
+    margin-bottom: 18px;
+  }
+  .eyebrow .dot{
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--u1);
+    box-shadow: 0 0 12px var(--u1);
+    animation: pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:.35} }
+  h1.title{
+    font-family: var(--serif);
+    font-weight: 800;
+    font-size: clamp(36px, 6vw, 72px);
+    line-height: 1;
+    margin: 0 0 18px;
+    letter-spacing: -.02em;
+  }
+  h1.title em{
+    font-style: italic;
+    color: var(--u1);
+    font-weight: 400;
+  }
+  .sub{
+    color: var(--text-dim);
+    font-size: 14px;
+    max-width: 760px;
+    line-height: 1.7;
+  }
+  .meta{
+    display: flex;
+    gap: 28px;
+    margin-top: 28px;
+    flex-wrap: wrap;
+    font-size: 11px;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+  }
+  .meta > div{ color: var(--text-mute); }
+  .meta b{ color: var(--text); font-weight: 600; }
+
+  /* ------------- LEGEND + CONTROLS ------------- */
+  .toolbar{
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 22px 32px;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+    background: rgba(6,8,22,.92);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+  }
+  .legend{ display: flex; gap: 8px; flex-wrap: wrap; }
+  .chip{
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 12px;
+    border: 1px solid currentColor;
+    border-radius: 100px;
+    font-size: 11px;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    transition: all .18s;
+    background: transparent;
+    color: var(--text-dim);
+  }
+  .chip[data-u="1"]{ color: var(--u1); }
+  .chip[data-u="2"]{ color: var(--u2); }
+  .chip[data-u="3"]{ color: var(--u3); }
+  .chip[data-u="4"]{ color: var(--u4); }
+  .chip[data-u="5"]{ color: var(--u5); }
+  .chip:hover{ background: rgba(255,255,255,.04); transform: translateY(-1px); }
+  .chip .swatch{
+    width: 7px; height: 7px; border-radius: 50%;
+    background: currentColor;
+    box-shadow: 0 0 8px currentColor;
+  }
+  .spacer{ flex: 1; }
+  .search{
+    position: relative;
+  }
+  .search input{
+    background: rgba(255,255,255,.04);
+    border: 1px solid var(--line);
+    color: var(--text);
+    font-family: var(--mono);
+    font-size: 12px;
+    padding: 8px 14px 8px 34px;
+    border-radius: 6px;
+    width: 220px;
+    outline: none;
+    transition: border-color .18s;
+  }
+  .search input:focus{ border-color: var(--u1); }
+  .search::before{
+    content: "";
+    position: absolute;
+    left: 12px; top: 50%;
+    transform: translateY(-50%);
+    width: 12px; height: 12px;
+    border: 1.5px solid var(--text-mute);
+    border-radius: 50%;
+  }
+  .search::after{
+    content: "";
+    position: absolute;
+    left: 22px; top: 50%;
+    width: 7px; height: 1.5px;
+    background: var(--text-mute);
+    transform: rotate(45deg);
+  }
+  .btn{
+    background: transparent;
+    border: 1px solid var(--line);
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: .1em;
+    text-transform: uppercase;
+    padding: 8px 14px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .18s;
+  }
+  .btn:hover{ color: var(--text); border-color: var(--text-dim); }
+
+  /* ------------- MIND MAP ------------- */
+  main{
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 48px 32px 100px;
+  }
+
+  .unit{
+    margin-bottom: 56px;
+    position: relative;
+    scroll-margin-top: 100px; /* clear the sticky toolbar */
+  }
+  .unit[data-u="1"]{ --c: var(--u1); }
+  .unit[data-u="2"]{ --c: var(--u2); }
+  .unit[data-u="3"]{ --c: var(--u3); }
+  .unit[data-u="4"]{ --c: var(--u4); }
+  .unit[data-u="5"]{ --c: var(--u5); }
+
+  .unit-head{
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 20px;
+    padding: 18px 22px;
+    background: linear-gradient(90deg, color-mix(in srgb, var(--c) 8%, transparent), transparent 70%);
+    border: 1px solid color-mix(in srgb, var(--c) 30%, transparent);
+    border-left: 3px solid var(--c);
+    border-radius: 6px;
+    cursor: pointer;
+    transition: all .22s;
+    user-select: none;
+  }
+  .unit-head:hover{
+    background: linear-gradient(90deg, color-mix(in srgb, var(--c) 14%, transparent), transparent 70%);
+    box-shadow: 0 0 0 1px var(--c), 0 0 24px color-mix(in srgb, var(--c) 25%, transparent);
+  }
+  .unit-id{
+    font-size: 10px;
+    letter-spacing: .2em;
+    color: var(--c);
+    padding: 4px 10px;
+    border: 1px solid var(--c);
+    border-radius: 100px;
+    background: color-mix(in srgb, var(--c) 10%, transparent);
+    text-transform: uppercase;
+    white-space: nowrap;
+  }
+  .unit-title{
+    font-family: var(--serif);
+    font-size: 26px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -.01em;
+  }
+  .unit-title em{ color: var(--c); font-style: italic; font-weight: 400; }
+  .unit-stat{
+    font-size: 11px;
+    color: var(--text-mute);
+    letter-spacing: .12em;
+    text-transform: uppercase;
+    text-align: right;
+  }
+  .unit-stat b{ color: var(--c); font-weight: 600; }
+  .unit-toggle{
+    width: 28px; height: 28px;
+    display: inline-flex; align-items: center; justify-content: center;
+    color: var(--c);
+    transition: transform .25s;
+  }
+  .unit.collapsed .unit-toggle{ transform: rotate(-90deg); }
+  .unit-toggle::before{
+    content: ""; width: 8px; height: 8px;
+    border-right: 1.5px solid currentColor;
+    border-bottom: 1.5px solid currentColor;
+    transform: rotate(45deg);
+    margin-top: -3px;
+  }
+
+  /* topics container with vertical spine */
+  .topics{
+    margin-top: 22px;
+    margin-left: 22px;
+    padding-left: 32px;
+    position: relative;
+    overflow: hidden;
+    transition: max-height .35s ease;
+  }
+  .unit.collapsed .topics{ max-height: 0; margin-top: 0; }
+  .topics::before{
+    content: "";
+    position: absolute;
+    left: 0; top: 18px; bottom: 18px;
+    width: 1px;
+    background: color-mix(in srgb, var(--c) 45%, transparent);
+  }
+
+  .topic{
+    position: relative;
+    margin-bottom: 28px;
+  }
+  .topic::before{
+    content: "";
+    position: absolute;
+    left: -32px; top: 22px;
+    width: 26px; height: 1px;
+    background: color-mix(in srgb, var(--c) 45%, transparent);
+  }
+  .topic::after{
+    content: "";
+    position: absolute;
+    left: -36px; top: 18px;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    background: var(--bg);
+    border: 1.5px solid var(--c);
+    box-shadow: 0 0 8px color-mix(in srgb, var(--c) 60%, transparent);
+  }
+
+  .topic-card{
+    background: rgba(255,255,255,.025);
+    border: 1px solid color-mix(in srgb, var(--c) 25%, transparent);
+    border-radius: 8px;
+    padding: 16px 20px;
+    transition: all .2s;
+  }
+  .topic-card:hover{
+    border-color: color-mix(in srgb, var(--c) 55%, transparent);
+    background: rgba(255,255,255,.04);
+  }
+  .topic-head{
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    margin-bottom: 10px;
+  }
+  .q-tag{
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    color: var(--c);
+    padding: 3px 8px;
+    background: color-mix(in srgb, var(--c) 14%, transparent);
+    border-radius: 3px;
+  }
+  .topic-name{
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--text);
+    letter-spacing: -.005em;
+  }
+  .hot-badge{
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: .12em;
+    color: var(--bg);
+    background: var(--hot);
+    padding: 3px 8px;
+    border-radius: 3px;
+    text-transform: uppercase;
+    box-shadow: 0 0 12px color-mix(in srgb, var(--hot) 50%, transparent);
+    animation: hotpulse 2.6s ease-in-out infinite;
+  }
+  @keyframes hotpulse{ 0%,100%{box-shadow: 0 0 12px color-mix(in srgb, var(--hot) 50%, transparent);} 50%{box-shadow: 0 0 20px color-mix(in srgb, var(--hot) 70%, transparent);} }
+
+  .radar{
+    font-size: 11px;
+    color: var(--text-mute);
+    margin-top: 4px;
+    margin-bottom: 14px;
+    line-height: 1.6;
+    padding-left: 0;
+  }
+  .radar b{
+    color: var(--c);
+    font-weight: 600;
+    letter-spacing: .06em;
+    text-transform: uppercase;
+    font-size: 10px;
+    margin-right: 6px;
+  }
+
+  /* sub-points list */
+  .leaves{
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 6px;
+    padding-left: 0;
+  }
+  @media (min-width: 880px){
+    .leaves{ grid-template-columns: 1fr 1fr; gap: 6px 28px; }
+    .leaves .leaf.wide{ grid-column: 1 / -1; }
+  }
+  .leaf{
+    position: relative;
+    padding: 5px 0 5px 18px;
+    font-size: 12.5px;
+    line-height: 1.55;
+    color: var(--text-dim);
+  }
+  .leaf::before{
+    content: "";
+    position: absolute;
+    left: 0; top: 13px;
+    width: 8px; height: 1px;
+    background: color-mix(in srgb, var(--c) 60%, transparent);
+  }
+  .leaf b{ color: var(--text); font-weight: 600; }
+  .leaf code{
+    font-family: var(--mono);
+    font-size: 11.5px;
+    color: var(--c);
+    background: color-mix(in srgb, var(--c) 10%, transparent);
+    padding: 1px 6px;
+    border-radius: 3px;
+  }
+
+  /* formula box */
+  .formula{
+    margin-top: 12px;
+    padding: 10px 14px;
+    background: color-mix(in srgb, var(--c) 6%, rgba(0,0,0,.3));
+    border-left: 2px solid var(--c);
+    border-radius: 0 4px 4px 0;
+    font-family: var(--mono);
+    font-size: 12px;
+    color: var(--text);
+    line-height: 1.7;
+  }
+  .formula .lbl{
+    display: block;
+    font-size: 9.5px;
+    letter-spacing: .18em;
+    text-transform: uppercase;
+    color: var(--c);
+    margin-bottom: 4px;
+    font-weight: 600;
+  }
+  .formula code{ color: var(--text); background: transparent; padding: 0; font-size: 12px; }
+
+  /* footer */
+  footer{
+    max-width: 1480px;
+    margin: 0 auto;
+    padding: 32px;
+    border-top: 1px solid var(--line);
+    color: var(--text-mute);
+    font-size: 11px;
+    letter-spacing: .08em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 12px;
+  }
+  footer .leds{ display: flex; gap: 6px; align-items: center; }
+  footer .led{
+    width: 6px; height: 6px; border-radius: 50%;
+    background: var(--u1);
+    box-shadow: 0 0 6px currentColor;
+  }
+  footer .led:nth-child(2){ background: var(--u2); animation-delay: -.4s; }
+  footer .led:nth-child(3){ background: var(--u3); animation-delay: -.8s; }
+  footer .led:nth-child(4){ background: var(--u4); animation-delay: -1.2s; }
+  footer .led:nth-child(5){ background: var(--u5); animation-delay: -1.6s; }
+  footer .led{ animation: pulse 2.4s ease-in-out infinite; }
+
+  /* search hide */
+  .hidden{ display: none !important; }
+  .dim{ opacity: .25; transition: opacity .15s; }
+
+  /* responsive */
+  @media (max-width: 700px){
+    header{ padding: 36px 20px 22px; }
+    main{ padding: 28px 18px 80px; }
+    .toolbar{ padding: 14px 18px; }
+    .search input{ width: 100%; }
+    .unit-head{ grid-template-columns: 1fr auto; gap: 12px; }
+    .unit-id{ grid-row: 1; grid-column: 1; }
+    .unit-toggle{ grid-row: 1; grid-column: 2; }
+    .unit-title{ grid-row: 2; grid-column: 1 / -1; font-size: 20px; }
+    .unit-stat{ grid-row: 3; grid-column: 1 / -1; text-align: left; }
+    .leaves{ grid-template-columns: 1fr !important; }
+    .topics{ margin-left: 8px; padding-left: 22px; }
+    .topic::before{ left: -22px; width: 16px; }
+    .topic::after{ left: -26px; }
+  }
+
+  /* print */
+  @media print{
+    body{ background: white; color: black; }
+    .toolbar, footer .leds, .hot-badge{ display: none; }
+    .unit-head, .topic-card, .formula{ break-inside: avoid; }
+    .topic{ break-inside: avoid; }
+    .leaf, .topic-name, .unit-title, .unit-id{ color: black !important; }
+    .leaf b, .formula{ color: #222 !important; }
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="eyebrow"><span class="dot"></span><span>BCS603 / KCS603 · B.Tech CS-AIML · Semester VI · AKTU</span></div>
+  <h1 class="title">Computer<br>Networks <em>· mind map</em></h1>
+  <p class="sub">The 25-question high-yield core, mapped as a circuit. Five units, each a colour-coded branch; every topic carries its sub-points, the exam-radar trace showing which previous-year papers it appeared in, and the key formula or numerical pattern where one exists.</p>
+  <div class="meta">
+    <div><b>5</b> units</div>
+    <div><b>25</b> topics</div>
+    <div><b>120+</b> sub-points</div>
+    <div><b>4</b> PYQs analysed (2021-22 → 2024-25)</div>
+  </div>
+</header>
+
+<div class="toolbar">
+  <div class="legend">
+    <div class="chip" data-u="1"><span class="swatch"></span>Unit I · Physical</div>
+    <div class="chip" data-u="2"><span class="swatch"></span>Unit II · Data Link</div>
+    <div class="chip" data-u="3"><span class="swatch"></span>Unit III · Network</div>
+    <div class="chip" data-u="4"><span class="swatch"></span>Unit IV · Transport</div>
+    <div class="chip" data-u="5"><span class="swatch"></span>Unit V · Application</div>
+  </div>
+  <div class="spacer"></div>
+  <div class="search"><input id="q" type="text" placeholder="Search topics, terms, formulae…" autocomplete="off"></div>
+  <button class="btn" id="expandAll">Expand all</button>
+  <button class="btn" id="collapseAll">Collapse all</button>
+</div>
+
+<main id="map">
+
+<!-- ================= UNIT I ================= -->
+<section class="unit" data-u="1">
+  <div class="unit-head">
+    <span class="unit-id">L1-PHY</span>
+    <div class="unit-title">Unit I <em>· Introductory Concepts &amp; Physical Layer</em></div>
+    <div class="unit-stat"><b>5</b> topics</div>
+    <span class="unit-toggle"></span>
+  </div>
+  <div class="topics">
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q1</span>
+          <span class="topic-name">OSI Reference Model</span>
+        </div>
+        <div class="radar"><b>radar</b>2022-23 Q3a (10m) · 2024-25 Q1e · 2021-22 Q6b · near-guaranteed</div>
+        <div class="leaves">
+          <div class="leaf"><b>7-layer ISO framework</b> (1984) — conceptual, not a protocol</div>
+          <div class="leaf">Each layer is <b>independent</b>; uses below, serves above</div>
+          <div class="leaf"><b>Layers (1→7):</b> Physical · Data Link · Network · Transport · Session · Presentation · Application</div>
+          <div class="leaf"><b>Data units:</b> bit → frame → packet → segment → data</div>
+          <div class="leaf"><b>Encapsulation</b> top-down at sender, decapsulation bottom-up at receiver</div>
+          <div class="leaf">Data Link adds both header <b>and trailer</b> (for error check)</div>
+        </div>
+        <div class="formula"><span class="lbl">mnemonic</span><code>All People Seem To Need Data Processing</code> (L7 → L1)</div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q2</span>
+          <span class="topic-name">OSI vs TCP/IP Model</span>
+        </div>
+        <div class="radar"><b>radar</b>2023-24 Q2a (10m) · 2022-23 Q1c</div>
+        <div class="leaves">
+          <div class="leaf"><b>OSI:</b> 7 layers, ISO, reference-first, strict layering</div>
+          <div class="leaf"><b>TCP/IP:</b> 4–5 layers, DARPA, protocol-first, loose coupling</div>
+          <div class="leaf">TCP/IP <b>merges</b> Session + Presentation into Application</div>
+          <div class="leaf">OSI Transport: connection-oriented only · TCP/IP: <b>TCP + UDP</b></div>
+          <div class="leaf">OSI Network: CO + CL · TCP/IP Internet: <b>CL only (IP)</b></div>
+          <div class="leaf">TCP/IP layers: Application · Transport · Internet · Network Access</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q3</span>
+          <span class="topic-name">Network Topologies</span>
+        </div>
+        <div class="radar"><b>radar</b>2021-22 Q1b · 2022-23 Q3b · 2023-24 Q3b · 2024-25 Q1a · extremely high</div>
+        <div class="leaves">
+          <div class="leaf"><b>Bus:</b> single backbone, cheap, but one fault = whole net down</div>
+          <div class="leaf"><b>Star:</b> central hub/switch, easy reconfig, hub = SPOF</div>
+          <div class="leaf"><b>Ring:</b> closed loop, token-based, orderly but one break disrupts all</div>
+          <div class="leaf"><b>Mesh:</b> dedicated p2p links, very robust, costly</div>
+          <div class="leaf"><b>Tree:</b> hierarchy of stars on a backbone</div>
+          <div class="leaf"><b>Hybrid:</b> mix of two or more (flexible, complex)</div>
+        </div>
+        <div class="formula"><span class="lbl">mesh maths (n nodes)</span>Links = <code>n(n−1)/2</code> · I/O ports per node = <code>n−1</code><br>For n=10 → <b>45 links</b>, 9 ports each (2024-25 Q1a answer)</div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q4</span>
+          <span class="topic-name">Transmission Media</span>
+        </div>
+        <div class="radar"><b>radar</b>2021-22 Q1a · core syllabus topic</div>
+        <div class="leaves">
+          <div class="leaf"><b>Guided (wired):</b> Twisted pair (UTP/STP), Coaxial, Fibre-optic</div>
+          <div class="leaf"><b>Unguided (wireless):</b> Radio, Microwave, Infrared</div>
+          <div class="leaf"><b>UTP:</b> cheap, common in LAN/phone, limited BW &amp; distance</div>
+          <div class="leaf"><b>Coaxial:</b> better noise immunity than TP, used in CATV / old Ethernet</div>
+          <div class="leaf"><b>Fibre:</b> highest BW, lowest attenuation, EMI-immune; expensive, fragile</div>
+          <div class="leaf"><b>Microwave:</b> unidirectional, line-of-sight, satellite/cellular</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q5</span>
+          <span class="topic-name">Network Devices + Transmission Impairments</span>
+        </div>
+        <div class="radar"><b>radar</b>2023-24 Q3a (10m) · 2022-23 Q2a · 2023-24 Q1d (bridge) · 2024-25 Q1b (attenuation)</div>
+        <div class="leaves">
+          <div class="leaf"><b>L1 Physical:</b> Repeater, Hub (signal regen / multiport repeater)</div>
+          <div class="leaf"><b>L2 Data Link:</b> Bridge, Switch (MAC-based, separate collision domains)</div>
+          <div class="leaf"><b>L3 Network:</b> Router (IP-based, separates broadcast domains)</div>
+          <div class="leaf"><b>All layers:</b> Gateway (protocol converter)</div>
+          <div class="leaf"><b>Bridge:</b> learning table by source-MAC, spanning tree avoids loops</div>
+          <div class="leaf"><b>Impairments:</b> Attenuation · Distortion · Noise</div>
+          <div class="leaf">Noise types: <b>thermal · induced · crosstalk · impulse</b></div>
+        </div>
+        <div class="formula"><span class="lbl">attenuation (dB)</span><code>dB = 10·log₁₀(P₂/P₁)</code><br>−3 dB ⇒ power halved. P₁=2 W, −3 dB → <b>P₂ = 1 W</b> (2024-25 Q1b)</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= UNIT II ================= -->
+<section class="unit" data-u="2">
+  <div class="unit-head">
+    <span class="unit-id">L2-MAC</span>
+    <div class="unit-title">Unit II <em>· Data Link Layer &amp; Medium Access Control</em></div>
+    <div class="unit-stat"><b>5</b> topics</div>
+    <span class="unit-toggle"></span>
+  </div>
+  <div class="topics">
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q1</span>
+          <span class="topic-name">Cyclic Redundancy Check (CRC)</span>
+          <span class="hot-badge">★ all 4 PYQs</span>
+        </div>
+        <div class="radar"><b>radar</b>2021-22 Q4b · 2022-23 Q4a · 2023-24 Q5b · 2024-25 Q2a · the single most repeated numerical</div>
+        <div class="leaves">
+          <div class="leaf">Polynomial division over <b>modulo-2 (XOR)</b> arithmetic</div>
+          <div class="leaf">Sender: append <code>r</code> zeros, divide by generator, remainder = CRC</div>
+          <div class="leaf">Codeword = data + CRC, exactly divisible by generator</div>
+          <div class="leaf">Receiver: divide received word by gen; remainder 0 = OK, else error</div>
+          <div class="leaf"><b>Detects:</b> all single-bit; all bursts of length ≤ <code>r</code>; most longer bursts</div>
+          <div class="leaf">Used in Ethernet, Wi-Fi, HDLC, IPv4 header (header-only)</div>
+        </div>
+        <div class="formula"><span class="lbl">worked: D=110101, G=x³+x+1 (=1011)</span>Augmented = 110101000 · divide by 1011 → remainder <code>111</code><br><b>Codeword = 110101111</b> · Receiver ÷ 1011 → remainder 000 ✓</div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q2</span>
+          <span class="topic-name">CSMA/CD vs CSMA/CA</span>
+        </div>
+        <div class="radar"><b>radar</b>2022-23 Q2b (10m) · 2021-22 Q5b</div>
+        <div class="leaves">
+          <div class="leaf"><b>CSMA core:</b> sense the channel before transmitting</div>
+          <div class="leaf"><b>Persistence modes:</b> 1-persistent · non-persistent · p-persistent</div>
+          <div class="leaf"><b>CSMA/CD</b> (wired, 802.3): detect collision while sending → abort + jam + binary exponential back-off</div>
+          <div class="leaf">CD needs frame time ≥ 2·Tp ⇒ min frame size in Ethernet</div>
+          <div class="leaf"><b>CSMA/CA</b> (wireless, 802.11): cannot detect collisions while TX (hidden terminal)</div>
+          <div class="leaf">CA tools: IFS + random back-off + <b>RTS / CTS</b> + explicit ACK</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q3</span>
+          <span class="topic-name">Sliding-Window Protocols (S&amp;W · GBN · SR)</span>
+        </div>
+        <div class="radar"><b>radar</b>2021-22 Q2c/2d/3a/3b · 2022-23 Q2d · 2023-24 Q2b</div>
+        <div class="leaves">
+          <div class="leaf"><b>Stop-and-Wait:</b> send 1 frame, wait ACK; 1-bit seq#</div>
+          <div class="leaf"><b>Go-Back-N:</b> sender window = 2ᵐ−1, receiver window = 1, cumulative ACK</div>
+          <div class="leaf">GBN on loss → retransmit lost frame <b>+ everything after</b></div>
+          <div class="leaf"><b>Selective Repeat:</b> sender &amp; receiver windows = 2ᵐ⁻¹, individual ACK</div>
+          <div class="leaf">SR retransmits <b>only</b> the lost frame; receiver buffers out-of-order</div>
+          <div class="leaf">Comparison ↑ efficiency: S&amp;W &lt; GBN &lt; SR</div>
+        </div>
+        <div class="formula"><span class="lbl">Stop &amp; Wait efficiency</span><code>η = 1 / (1 + 2a)</code> where <code>a = Tp / Tt</code><br>Large <code>a</code> (long link or high BW) ⇒ poor utilisation</div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q4</span>
+          <span class="topic-name">Error Detection &amp; Hamming Code</span>
+        </div>
+        <div class="radar"><b>radar</b>2022-23 Q1g (Hamming) · 2022-23 Q4b · 2023-24 Q2b</div>
+        <div class="leaves">
+          <div class="leaf"><b>Detection:</b> Parity · 2-D Parity · Checksum · CRC</div>
+          <div class="leaf"><b>Correction (FEC):</b> Hamming code — detects + locates + fixes single-bit error</div>
+          <div class="leaf">Parity bits at positions <code>2⁰, 2¹, 2², …</code></div>
+          <div class="leaf">Constraint: <code>2ʳ ≥ m + r + 1</code> (m=data bits, r=parity bits)</div>
+          <div class="leaf">Cᵢ checks every position whose binary has bit-i set</div>
+          <div class="leaf">Error position = (Cᵣ … C₂ C₁) read as binary</div>
+        </div>
+        <div class="formula"><span class="lbl">worked: received 1110101 (2022-23 Q1g)</span>C1=0 ✓ · C2=1 ✗ · C4=0 ✓ → C4 C2 C1 = 010₂ = <b>position 2</b><br>Flip bit 2 → corrected codeword <code>1010101</code></div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q5</span>
+          <span class="topic-name">Random Access — ALOHA &amp; CSMA</span>
+        </div>
+        <div class="radar"><b>radar</b>2023-24 Q4b (10m) · 2024-25 Q3a (slotted ALOHA numerical)</div>
+        <div class="leaves">
+          <div class="leaf"><b>Pure ALOHA:</b> transmit any time; vulnerable period 2·Tfr</div>
+          <div class="leaf"><b>Slotted ALOHA:</b> only at slot start; vulnerable Tfr</div>
+          <div class="leaf"><b>CSMA:</b> sense before send (already covered in Q2)</div>
+          <div class="leaf">Pure ALOHA throughput: <code>S = G·e⁻²ᴳ</code>, max ≈ <b>18.4 %</b> at G=0.5</div>
+          <div class="leaf">Slotted ALOHA throughput: <code>S = G·e⁻ᴳ</code>, max ≈ <b>36.8 %</b> at G=1</div>
+          <div class="leaf">CSMA persistence modes already itemised in Q2</div>
+        </div>
+        <div class="formula"><span class="lbl">worked: 10 % idle slots (2024-25)</span><code>P(0) = e⁻ᴳ = 0.10</code> → <code>G = ln 10 ≈ 2.303</code><br>Throughput <code>S = G·e⁻ᴳ = 2.303 × 0.10 ≈ </code><b>0.23</b> (≈ 23 %)</div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= UNIT III ================= -->
+<section class="unit" data-u="3">
+  <div class="unit-head">
+    <span class="unit-id">L3-NET</span>
+    <div class="unit-title">Unit III <em>· Network Layer</em></div>
+    <div class="unit-stat"><b>5</b> topics</div>
+    <span class="unit-toggle"></span>
+  </div>
+  <div class="topics">
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q1</span>
+          <span class="topic-name">Distance-Vector Routing &amp; Count-to-Infinity</span>
+        </div>
+        <div class="radar"><b>radar</b>2021-22 Q4a · 2022-23 Q1j · 2024-25 Q4a + Q4b · dominant routing question</div>
+        <div class="leaves">
+          <div class="leaf">Based on <b>Bellman-Ford</b> equation; decentralised, dynamic</div>
+          <div class="leaf">Each router keeps a distance vector; periodically shares with neighbours</div>
+          <div class="leaf">Update rule: <code>D(x,y) = min over z [ c(x,z) + D(z,y) ]</code></div>
+          <div class="leaf"><b>Good news fast, bad news slow</b> → count-to-infinity</div>
+          <div class="leaf"><b>Mitigations:</b> define infinity (RIP=16) · split horizon · poison reverse · hold-down timers</div>
+          <div class="leaf">RIP is the classic DVR protocol</div>
+        </div>
+        <div class="formula"><span class="lbl">worked: router C (2024-25 Q4b)</span>Via B (+6): (11,6,14,18,12,8) · Via D (+3): (19,15,9,3,12,13) · Via E (+5): (12,11,8,14,5,9)<br><b>C's table:</b> A=11/B · B=6/B · C=0 · D=3/D · E=5/E · F=8/B</div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q2</span>
+          <span class="topic-name">IP Addressing · Subnetting · CIDR</span>
+        </div>
+        <div class="radar"><b>radar</b>2021-22 Q6a · 2022-23 Q5b · 2024-25 Q2b · in 3 of 4 papers</div>
+        <div class="leaves">
+          <div class="leaf"><b>Class A</b> 1–126 /8 · <b>Class B</b> 128–191 /16 · <b>Class C</b> 192–223 /24</div>
+          <div class="leaf"><b>Class D</b> 224–239 multicast · <b>Class E</b> 240–255 reserved</div>
+          <div class="leaf">Subnet: borrow <code>n</code> bits → <code>2ⁿ</code> subnets, block size <code>2^(host bits left)</code></div>
+          <div class="leaf"><b>CIDR:</b> IP/prefix, no class boundaries, supernetting / route aggregation</div>
+          <div class="leaf">First addr of each subnet = network ID, last = broadcast</div>
+        </div>
+        <div class="formula"><span class="lbl">worked: 192.168.10.0/24 → 4 subnets (2024-25 Q2b)</span>n=2 ⇒ <code>/26</code> · mask <code>255.255.255.192</code> · block 64<br><code>.0–.63 · .64–.127 · .128–.191 · .192–.255</code></div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q3</span>
+          <span class="topic-name">IPv4 vs IPv6</span>
+        </div>
+        <div class="radar"><b>radar</b>2022-23 Q5a · 2023-24 Q2c · 2024-25 Q5a</div>
+        <div class="leaves">
+          <div class="leaf"><b>IPv4:</b> 32-bit, dotted decimal, ~4.3B addresses, exhausted</div>
+          <div class="leaf"><b>IPv6:</b> 128-bit, hex colon, practically unlimited</div>
+          <div class="leaf">IPv4 header: variable 20–60 B, has checksum, 12 fields</div>
+          <div class="leaf"><b>IPv6 header:</b> fixed 40 B, no checksum, 8 fields</div>
+          <div class="leaf">IPv6 drops broadcast (uses multicast + <b>anycast</b>)</div>
+          <div class="leaf"><b>Extension headers</b> chain via "Next Header" — routers process only what they need</div>
+          <div class="leaf">IPv6 features: <b>IPSec built-in · SLAAC auto-config · Flow Label for QoS</b></div>
+          <div class="leaf">IPv6 fragmentation only by sender, not routers</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q4</span>
+          <span class="topic-name">Congestion Control — Leaky vs Token Bucket</span>
+        </div>
+        <div class="radar"><b>radar</b>2022-23 Q2c · 2023-24 Q1f · 2024-25 Q1f + Q2c · rising frequency</div>
+        <div class="leaves">
+          <div class="leaf">Congestion = router queues overflow → drops → retransmits → collapse</div>
+          <div class="leaf"><b>Open-loop:</b> prevent in advance (policy) · <b>Closed-loop:</b> react via feedback</div>
+          <div class="leaf"><b>Leaky bucket:</b> output at constant rate, smooths bursts, excess discarded</div>
+          <div class="leaf"><b>Token bucket:</b> tokens added at rate, allows burst up to bucket size</div>
+          <div class="leaf">Token bucket gives idle credit; leaky bucket does not</div>
+          <div class="leaf">Token-bucket regulator never drops packets itself</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q5</span>
+          <span class="topic-name">ARP · RARP · DHCP · ICMP</span>
+        </div>
+        <div class="radar"><b>radar</b>2021-22 Q2e (ICMP) · 2022-23 Q1f · 2024-25 Q5b</div>
+        <div class="leaves">
+          <div class="leaf"><b>ARP:</b> IP → MAC; broadcast request, unicast reply, ARP cache</div>
+          <div class="leaf"><b>RARP:</b> MAC → IP; obsolete, superseded by BOOTP / DHCP</div>
+          <div class="leaf"><b>DHCP:</b> dynamic IP + mask + gateway + DNS via lease</div>
+          <div class="leaf">DHCP four-step <b>DORA</b>: Discover · Offer · Request · Ack</div>
+          <div class="leaf"><b>ICMP:</b> error reporting (no error correction); also query messages</div>
+          <div class="leaf">ICMP messages: dest unreachable · time exceeded · source quench · redirect · echo</div>
+          <div class="leaf"><b>ping</b> uses ICMP echo · <b>traceroute</b> uses ICMP time-exceeded</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= UNIT IV ================= -->
+<section class="unit" data-u="4">
+  <div class="unit-head">
+    <span class="unit-id">L4-TRN</span>
+    <div class="unit-title">Unit IV <em>· Transport Layer</em></div>
+    <div class="unit-stat"><b>5</b> topics</div>
+    <span class="unit-toggle"></span>
+  </div>
+  <div class="topics">
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q1</span>
+          <span class="topic-name">TCP vs UDP</span>
+        </div>
+        <div class="radar"><b>radar</b>2021-22 Q7a (10m) · 2022-23 Q6b</div>
+        <div class="leaves">
+          <div class="leaf"><b>TCP:</b> connection-oriented · reliable · ordered · 20–60 B header</div>
+          <div class="leaf"><b>UDP:</b> connectionless · unreliable · unordered · <b>8 B</b> header</div>
+          <div class="leaf">TCP has flow + congestion control · UDP has neither</div>
+          <div class="leaf">UDP fields: Src Port · Dst Port · Length · Checksum (only)</div>
+          <div class="leaf"><b>TCP apps:</b> HTTP · FTP · SMTP · TELNET</div>
+          <div class="leaf"><b>UDP apps:</b> DNS · DHCP · streaming · VoIP · gaming</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q2</span>
+          <span class="topic-name">TCP Segment Header</span>
+        </div>
+        <div class="radar"><b>radar</b>2023-24 Q2d (10m) · 2024-25 Q6b</div>
+        <div class="leaves">
+          <div class="leaf">Src + Dst <b>Port</b> (16 b each) · Seq # (32 b) · Ack # (32 b)</div>
+          <div class="leaf"><b>HLEN</b> (4 b) · Reserved (6 b) · <b>Flags</b> (6 b)</div>
+          <div class="leaf">Flags: <code>URG · ACK · PSH · RST · SYN · FIN</code></div>
+          <div class="leaf"><b>Window size</b> (16 b) — basis of flow control</div>
+          <div class="leaf">Checksum (16 b) over header + data + pseudo-header</div>
+          <div class="leaf">Urgent Pointer (16 b) + Options (variable, e.g. MSS, window scaling)</div>
+          <div class="leaf wide"><b>Features:</b> connection-oriented · reliable · full-duplex · byte-stream · flow + error + congestion control</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q3</span>
+          <span class="topic-name">Connection Management · 3-Way Handshake</span>
+        </div>
+        <div class="radar"><b>radar</b>2023-24 Q6a (10m) · 2024-25 Q6b</div>
+        <div class="leaves">
+          <div class="leaf"><b>Establishment (3-way):</b> SYN → SYN+ACK → ACK</div>
+          <div class="leaf">Client: <code>seq=x</code> · Server: <code>seq=y, ack=x+1</code> · Client: <code>ack=y+1</code></div>
+          <div class="leaf">Three (not two) so both confirm each other's seq #</div>
+          <div class="leaf">Prevents old duplicate connection from being established</div>
+          <div class="leaf"><b>Termination (4-way):</b> FIN → ACK → FIN → ACK</div>
+          <div class="leaf"><b>Half-close:</b> one side sends FIN, still receives data</div>
+          <div class="leaf">After last ACK, brief <b>TIME-WAIT</b> state before full close</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q4</span>
+          <span class="topic-name">TCP Congestion Control</span>
+        </div>
+        <div class="radar"><b>radar</b>core syllabus · pairs naturally with flow control &amp; QoS</div>
+        <div class="leaves">
+          <div class="leaf">Two windows: receiver-advertised + <b>cwnd</b> (congestion window)</div>
+          <div class="leaf">Sender uses <code>min(rwnd, cwnd)</code></div>
+          <div class="leaf"><b>Slow Start:</b> cwnd starts at 1 MSS, doubles each RTT until ssthresh</div>
+          <div class="leaf"><b>Congestion Avoidance:</b> cwnd += 1 MSS per RTT (linear)</div>
+          <div class="leaf"><b>Timeout:</b> ssthresh = cwnd/2, cwnd = 1, restart Slow Start</div>
+          <div class="leaf"><b>3 dup-ACKs:</b> Fast Retransmit + Fast Recovery (cwnd = ssthresh)</div>
+          <div class="leaf wide"><b>AIMD</b> — Additive Increase, Multiplicative Decrease — the heart of TCP's stability</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q5</span>
+          <span class="topic-name">Quality of Service (QoS)</span>
+        </div>
+        <div class="radar"><b>radar</b>2022-23 Q1h · 2023-24 Q6b (10m)</div>
+        <div class="leaves">
+          <div class="leaf"><b>Flow characteristics:</b> Reliability · Delay · Jitter · Bandwidth</div>
+          <div class="leaf"><b>Scheduling:</b> FIFO · Priority Queuing · Weighted Fair Queuing</div>
+          <div class="leaf"><b>Traffic shaping:</b> Leaky Bucket · Token Bucket (Unit III)</div>
+          <div class="leaf"><b>Admission control:</b> accept new flow only if QoS achievable</div>
+          <div class="leaf"><b>Resource reservation:</b> buffers / BW / CPU pre-allocated</div>
+          <div class="leaf"><b>IntServ + RSVP:</b> per-flow reservation (accurate, not scalable)</div>
+          <div class="leaf"><b>DiffServ:</b> per-class marking (scalable, used in modern Internet)</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= UNIT V ================= -->
+<section class="unit" data-u="5">
+  <div class="unit-head">
+    <span class="unit-id">L7-APP</span>
+    <div class="unit-title">Unit V <em>· Application Layer</em></div>
+    <div class="unit-stat"><b>5</b> topics</div>
+    <span class="unit-toggle"></span>
+  </div>
+  <div class="topics">
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q1</span>
+          <span class="topic-name">Domain Name System (DNS)</span>
+        </div>
+        <div class="radar"><b>radar</b>2021-22 Q7b · 2022-23 Q6a + Q7a · 2024-25 Q2e · recurs in every paper</div>
+        <div class="leaves">
+          <div class="leaf">Maps domain names ↔ IP addresses · distributed hierarchical DB</div>
+          <div class="leaf">Runs over <code>UDP port 53</code></div>
+          <div class="leaf"><b>Namespace:</b> Root → TLD (.com, .in, .org) → 2nd-level → subdomain</div>
+          <div class="leaf"><b>Server types:</b> Root · TLD · Authoritative; <b>Resolver</b> on client</div>
+          <div class="leaf"><b>Resolution:</b> recursive (server does all) vs iterative (client follows referrals)</div>
+          <div class="leaf"><b>Records:</b> A (v4) · AAAA (v6) · MX (mail) · CNAME (alias) · NS · PTR</div>
+          <div class="leaf">Caching with TTL drastically cuts repeat lookups</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q2</span>
+          <span class="topic-name">Cryptography &amp; RSA</span>
+        </div>
+        <div class="radar"><b>radar</b>2022-23 Q2e · 2023-24 Q7b · 2024-25 Q2d · in 3 of 4 papers</div>
+        <div class="leaves">
+          <div class="leaf"><b>Goals:</b> confidentiality · integrity · authentication · non-repudiation</div>
+          <div class="leaf"><b>Symmetric:</b> one shared key (DES, AES); fast, key-distribution hard</div>
+          <div class="leaf"><b>Asymmetric:</b> public + private key pair (RSA); solves key distribution</div>
+          <div class="leaf">RSA steps: pick <code>p, q</code> primes → <code>n=pq, φ=(p−1)(q−1)</code></div>
+          <div class="leaf">Choose <code>e</code> with <code>gcd(e, φ)=1</code> · find <code>d</code> with <code>e·d ≡ 1 (mod φ)</code></div>
+          <div class="leaf"><b>Encrypt:</b> <code>C = Mᵉ mod n</code> · <b>Decrypt:</b> <code>M = Cᵈ mod n</code></div>
+        </div>
+        <div class="formula"><span class="lbl">worked: p=3, q=11</span>n=33 · φ=20 · e=7 · d=3 (because 7·3 = 21 ≡ 1 mod 20)<br>M=6 → C = 6⁷ mod 33 = <b>30</b> → M = 30³ mod 33 = <b>6</b> ✓</div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q3</span>
+          <span class="topic-name">E-mail — SMTP · POP3 · IMAP</span>
+        </div>
+        <div class="radar"><b>radar</b>2021-22 Q7b · 2022-23 Q6a · 2024-25 Q7a</div>
+        <div class="leaves">
+          <div class="leaf">Architecture: <b>UA</b> (User Agent) · <b>MTA</b> (Transfer) · <b>MAA</b> (Access)</div>
+          <div class="leaf"><b>SMTP:</b> push protocol · <code>TCP port 25</code> · HELO/MAIL FROM/RCPT TO/DATA</div>
+          <div class="leaf"><b>MIME:</b> extension that lets SMTP carry binary (images, audio, video) via Base64</div>
+          <div class="leaf"><b>POP3:</b> pull · <code>port 110</code> · downloads + deletes from server (single-device)</div>
+          <div class="leaf"><b>IMAP4:</b> pull · <code>port 143</code> · keeps mail on server, syncs all devices</div>
+          <div class="leaf">IMAP supports folders, partial download, search — POP3 does not</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q4</span>
+          <span class="topic-name">FTP &amp; HTTP</span>
+        </div>
+        <div class="radar"><b>radar</b>2021-22 Q1j + Q7b · 2023-24 Q7a (10m) · 2024-25 Q7b</div>
+        <div class="leaves">
+          <div class="leaf"><b>FTP:</b> file transfer · <code>port 21</code> (control) + <code>port 20</code> (data)</div>
+          <div class="leaf">FTP is <b>stateful</b> — control connection lasts the whole session</div>
+          <div class="leaf">FTP modes: <b>active</b> (server opens data) vs <b>passive</b> (client opens — firewall-friendly)</div>
+          <div class="leaf"><b>HTTP:</b> web · <code>port 80</code> · <b>HTTPS</b> on <code>port 443</code></div>
+          <div class="leaf">HTTP is <b>stateless</b>; cookies add state</div>
+          <div class="leaf"><b>Methods:</b> GET · POST · PUT · DELETE · HEAD · OPTIONS</div>
+          <div class="leaf">Status codes: 1xx info · 2xx OK · 3xx redirect · 4xx client err · 5xx server err</div>
+          <div class="leaf">Persistent connection carries multiple req/resp on one TCP connection</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="topic">
+      <div class="topic-card">
+        <div class="topic-head">
+          <span class="q-tag">Q5</span>
+          <span class="topic-name">SNMP &amp; Data Compression</span>
+        </div>
+        <div class="radar"><b>radar</b>2022-23 Q7b · 2023-24 Q2e (10m) · 2024-25 Q2e</div>
+        <div class="leaves">
+          <div class="leaf"><b>SNMP components:</b> Manager · Agent · MIB · SMI</div>
+          <div class="leaf"><b>Ops:</b> GET · GET-NEXT · SET · TRAP (agent-initiated alert)</div>
+          <div class="leaf">Ports: <code>UDP 161</code> (requests) · <code>UDP 162</code> (traps)</div>
+          <div class="leaf"><b>MIB</b> = collection of named managed objects; <b>SMI</b> = rules for defining them</div>
+          <div class="leaf"><b>Lossless compression:</b> Run-Length · Huffman · Lempel-Ziv (text, code)</div>
+          <div class="leaf"><b>Lossy compression:</b> JPEG (image) · MPEG (video) · MP3 (audio)</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div>
+    <div style="margin-bottom: 4px; color: var(--text-dim);">EXAM-RADAR LEGEND</div>
+    <div style="font-size: 10px;">Tags show the previous-year paper a topic appeared in. <span style="color: var(--hot)">★</span> means it appears in <b style="color: var(--text)">all four</b> uploaded PYQs.</div>
+  </div>
+  <div>
+    <div class="leds"><span class="led"></span><span class="led"></span><span class="led"></span><span class="led"></span><span class="led"></span></div>
+    <div style="font-size: 10px; margin-top: 6px; color: var(--text-dim); text-align: right;">5 UNITS ONLINE · 25 TOPICS INDEXED · BUILD 2026.05</div>
+  </div>
+</footer>
+
+<script>
+  // collapse / expand
+  document.querySelectorAll('.unit-head').forEach(h => {
+    h.addEventListener('click', () => {
+      const u = h.closest('.unit');
+      const topics = u.querySelector('.topics');
+      if (u.classList.contains('collapsed')) {
+        u.classList.remove('collapsed');
+        topics.style.maxHeight = topics.scrollHeight + 'px';
+        setTimeout(() => { topics.style.maxHeight = ''; }, 360);
+      } else {
+        topics.style.maxHeight = topics.scrollHeight + 'px';
+        // force reflow
+        void topics.offsetHeight;
+        topics.style.maxHeight = '0px';
+        u.classList.add('collapsed');
+      }
+    });
+  });
+
+  document.getElementById('expandAll').addEventListener('click', () => {
+    document.querySelectorAll('.unit.collapsed').forEach(u => {
+      u.classList.remove('collapsed');
+      u.querySelector('.topics').style.maxHeight = '';
+    });
+  });
+  document.getElementById('collapseAll').addEventListener('click', () => {
+    document.querySelectorAll('.unit:not(.collapsed)').forEach(u => {
+      u.querySelector('.topics').style.maxHeight = '0px';
+      u.classList.add('collapsed');
+    });
+  });
+
+  // legend chip — isolate a unit AND smooth-scroll to it; click again to clear (stays in place)
+  let active = null;
+  document.querySelectorAll('.chip').forEach(c => {
+    c.addEventListener('click', () => {
+      const u = c.dataset.u;
+      if (active === u) {
+        // second click: clear isolation, do NOT scroll
+        document.querySelectorAll('.unit').forEach(x => x.classList.remove('dim'));
+        active = null;
+      } else {
+        // isolate other units
+        document.querySelectorAll('.unit').forEach(x => {
+          x.classList.toggle('dim', x.dataset.u !== u);
+        });
+        active = u;
+
+        // navigate to the target unit
+        const target = document.querySelector('.unit[data-u="' + u + '"]');
+        if (target) {
+          // auto-expand if it was collapsed — otherwise we'd scroll to an empty header
+          if (target.classList.contains('collapsed')) {
+            target.classList.remove('collapsed');
+            target.querySelector('.topics').style.maxHeight = '';
+          }
+          // wait one frame so layout settles after any expand, then smooth-scroll
+          requestAnimationFrame(() => {
+            target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+          });
+        }
+      }
+    });
+  });
+
+  // search
+  const q = document.getElementById('q');
+  q.addEventListener('input', () => {
+    const term = q.value.trim().toLowerCase();
+    document.querySelectorAll('.topic').forEach(t => {
+      const text = t.textContent.toLowerCase();
+      t.classList.toggle('hidden', term && !text.includes(term));
+    });
+    // also auto-expand units while searching
+    if (term) {
+      document.querySelectorAll('.unit.collapsed').forEach(u => {
+        u.classList.remove('collapsed');
+        u.querySelector('.topics').style.maxHeight = '';
+      });
+    }
+  });
+</script>
+
+</body>
+</html>
